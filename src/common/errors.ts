@@ -9,36 +9,30 @@ export type Errors = {
 };
 
 export type ErrorName =
-  | "SERVER_ERROR"
-  | "USER_ERROR"
-  | "VALIDATION_ERROR"
-  | "AUTHENTICATION_ERROR"
-  | "NOT_FOUND"
-  | "CONFLICT"
-  | "DATABASE_ERROR"
-  | "NOT_IMPLEMENTED"
-  | "PERMISSION_ERROR"
-  | "RATE_LIMIT_EXCEEDED";
+  | 'SERVER_ERROR'
+  | 'USER_ERROR'
+  | 'VALIDATION_ERROR'
+  | 'AUTHENTICATION_ERROR'
+  | 'NOT_FOUND'
+  | 'CONFLICT'
+  | 'DATABASE_ERROR'
+  | 'NOT_IMPLEMENTED'
+  | 'PERMISSION_ERROR'
+  | 'RATE_LIMIT_EXCEEDED';
 
-export const criticalErrors: ErrorName[] = [
-  "SERVER_ERROR",
-  "DATABASE_ERROR",
-  "NOT_IMPLEMENTED",
-];
+export const criticalErrors: ErrorName[] = ['SERVER_ERROR', 'DATABASE_ERROR', 'NOT_IMPLEMENTED'];
 
 const errorMessages: { [key in ErrorName]: string } = {
-  USER_ERROR: "Bad request. Check that you are sending the right data.",
-  VALIDATION_ERROR: "Bad request. Check that you are sending the right data.",
-  AUTHENTICATION_ERROR: "Invalid authentication credentials",
-  NOT_FOUND: "The resources you request for was not found.",
-  CONFLICT: "We messed up on our end. We are working to fix this.",
-  DATABASE_ERROR: "We messed up on our end. We are working to fix this.",
-  SERVER_ERROR: "We messed up on our end. We are working to fix this.",
-  NOT_IMPLEMENTED: "We messed up on our end. We are working to fix this.",
-  PERMISSION_ERROR:
-    "You don't have the necessary permission to perform this action.",
-  RATE_LIMIT_EXCEEDED:
-    "You have exceeded the maximum number of requests. Please wait before trying again.",
+  USER_ERROR: 'Bad request. Check that you are sending the right data.',
+  VALIDATION_ERROR: 'Bad request. Check that you are sending the right data.',
+  AUTHENTICATION_ERROR: 'Invalid authentication credentials',
+  NOT_FOUND: 'The resources you request for was not found.',
+  CONFLICT: 'We messed up on our end. We are working to fix this.',
+  DATABASE_ERROR: 'We messed up on our end. We are working to fix this.',
+  SERVER_ERROR: 'We messed up on our end. We are working to fix this.',
+  NOT_IMPLEMENTED: 'We messed up on our end. We are working to fix this.',
+  PERMISSION_ERROR: "You don't have the necessary permission to perform this action.",
+  RATE_LIMIT_EXCEEDED: 'You have exceeded the maximum number of requests. Please wait before trying again.',
 };
 
 const errorCodes: { [key in ErrorName]: number } = {
@@ -82,11 +76,11 @@ export class Exception extends ErrorBase {
 }
 
 export function parseZodError(issues: ZodIssue[]) {
-	const numberOfIssues = issues.length;
-	let str = '';
-	for (let i = 0; i < numberOfIssues; i++) {
-		str = `${str} ${issues[i]['message']} at "${issues[i]['path'][0]}";`;
-	}
+  const numberOfIssues = issues.length;
+  let str = '';
+  for (let i = 0; i < numberOfIssues; i++) {
+    str = `${str} ${issues[i]['message']} at "${issues[i]['path'][0]}";`;
+  }
 
-	return str;
+  return str;
 }

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { UserI, AccountType, USER_NAMESPACE } from './user.dto';
+import { UserI, AccountType, USER_NAMESPACE } from '@/dtos/user.dto';
 
 const { Schema } = mongoose;
 
@@ -12,6 +12,11 @@ const UserSchema = new Schema<UserI>(
       default: AccountType.USER,
     },
     isVerified: { type: Boolean, default: false },
+    address: {
+      street: String,
+      city: String,
+      state: String,
+    },
   },
   {
     timestamps: true,

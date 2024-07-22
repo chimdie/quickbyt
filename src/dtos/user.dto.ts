@@ -32,6 +32,22 @@ export const user_dto = z.object({
   }),
   createdAt: z.string(),
   updatedAt: z.string(),
+  address: z.object({
+    street: z.string(),
+    city: z.string(),
+    state: z.string(),
+  }),
 });
 
 export type UserI = z.infer<typeof user_dto>;
+
+export const user_id_dto = z.object({
+  id: z
+    .string()
+    .refine(validator.isMongoId)
+    .transform((id) => {
+      return new Types.ObjectId(id);
+    }),
+});
+
+export type UserId = z.infer<typeof user_id_dto>;

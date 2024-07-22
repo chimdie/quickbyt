@@ -3,9 +3,9 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { successResponder, errorResponder, customErrorHandler } from '@/common/http-responder';
 import { JWT_SECRET, JWT_EXPIRATION } from '@/common/config';
-import { LoginUser, SignUser } from '../model/auth.dto';
-import { AuthModel } from '../model/auth.model';
-import { UserModel } from '@/modules/user/model/user.model';
+import { LoginUser, SignUser } from '@/dtos/auth.dto';
+import { AuthModel } from '@/models/auth.model';
+import { UserModel } from '@/models/user.model';
 
 export const signup_ctl = async (req: Request<unknown, unknown, SignUser>, res: Response) => {
   try {
@@ -52,14 +52,13 @@ export const login_ctl = async (req: Request<unknown, unknown, LoginUser>, res: 
     }
 
     const isPasswordValid = await bcrypt.compare(password, authDetails.hash);
-    // if user password doesn't match, throw an error ELSE continue with login
 
     if (!isPasswordValid) {
       return customErrorHandler(res, { name: 'BAD REQUEST', message: 'Passwords does not match', code: 400 });
     }
 
     const token = jwt.sign({ id: user._id, username: user.username }, JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: JWT_EXPIRATION,
     });
 
     return successResponder(res, { token, user });
