@@ -1,5 +1,5 @@
 import express, { Express, NextFunction, Request, Response } from 'express';
-import routerV1 from '@/router/v1.router';
+import { routerV1 } from '@/routes/v1.routes';
 import { Errors } from '@/common/errors';
 import { errorResponder, customErrorHandler } from '@/common/http-responder';
 

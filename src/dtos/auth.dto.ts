@@ -1,5 +1,5 @@
 import { z, enum as _enum } from 'zod';
-import { user_dto } from '@/modules/user/model/user.dto';
+import { user_dto } from '@/dtos/user.dto';
 
 export const signup_dto = user_dto
   .pick({
