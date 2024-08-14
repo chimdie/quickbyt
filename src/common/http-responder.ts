@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import { Errors, Exception } from './errors';
+import { codeToErrorName, errorMessages, Errors, Exception } from './errors';
 
 export function successResponder<T>(
   response: Response,
@@ -44,12 +44,15 @@ export function errorResponder(response: Response, error: any) {
 
 export function customErrorHandler(
   res: Response,
-  err: { name: string; message: string; code: number; context?: string }
+  err: { name?: string; message?: string; code: number; context?: string }
 ) {
+  const errorName = codeToErrorName[err.code] || err.name || 'SERVER_ERROR';
+  const errorMessage = err.message || errorMessages[errorName];
+
   res.status(err.code).json({
     isError: true,
-    description: err.name,
-    message: err.message,
+    description: errorName,
+    message: errorMessage,
     context: err.context,
     payload: null,
   });

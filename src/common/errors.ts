@@ -10,7 +10,7 @@ export type Errors = {
 
 export type ErrorName =
   | 'SERVER_ERROR'
-  | 'USER_ERROR'
+  | 'BAD_REQUEST'
   | 'VALIDATION_ERROR'
   | 'AUTHENTICATION_ERROR'
   | 'NOT_FOUND'
@@ -22,8 +22,8 @@ export type ErrorName =
 
 export const criticalErrors: ErrorName[] = ['SERVER_ERROR', 'DATABASE_ERROR', 'NOT_IMPLEMENTED'];
 
-const errorMessages: { [key in ErrorName]: string } = {
-  USER_ERROR: 'Bad request. Check that you are sending the right data.',
+export const errorMessages: { [key in ErrorName]: string } = {
+  BAD_REQUEST: 'Bad request. Check that you are sending the right data.',
   VALIDATION_ERROR: 'Bad request. Check that you are sending the right data.',
   AUTHENTICATION_ERROR: 'Invalid authentication credentials',
   NOT_FOUND: 'The resources you request for was not found.',
@@ -36,7 +36,7 @@ const errorMessages: { [key in ErrorName]: string } = {
 };
 
 const errorCodes: { [key in ErrorName]: number } = {
-  USER_ERROR: 400,
+  BAD_REQUEST: 400,
   VALIDATION_ERROR: 400,
   AUTHENTICATION_ERROR: 401,
   NOT_FOUND: 404,
@@ -46,6 +46,17 @@ const errorCodes: { [key in ErrorName]: number } = {
   NOT_IMPLEMENTED: 501,
   PERMISSION_ERROR: 403,
   RATE_LIMIT_EXCEEDED: 429,
+};
+
+export const codeToErrorName: { [key: number]: ErrorName } = {
+  400: 'BAD_REQUEST',
+  401: 'AUTHENTICATION_ERROR',
+  403: 'PERMISSION_ERROR',
+  404: 'NOT_FOUND',
+  409: 'CONFLICT',
+  429: 'RATE_LIMIT_EXCEEDED',
+  500: 'SERVER_ERROR',
+  501: 'NOT_IMPLEMENTED',
 };
 
 export class ErrorBase extends Error {

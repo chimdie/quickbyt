@@ -13,9 +13,9 @@ const UserSchema = new Schema<UserI>(
     },
     isVerified: { type: Boolean, default: false },
     address: {
-      street: String,
-      city: String,
-      state: String,
+      street: { type: String, default: null },
+      city: { type: String, default: null },
+      state: { type: String, default: null },
     },
   },
   {
