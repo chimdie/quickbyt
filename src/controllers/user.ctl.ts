@@ -15,7 +15,7 @@ export const get_users_ctl = async (_req: Request<unknown, unknown, UserI[]>, re
   }
 };
 
-export const get_user_byId_ctl = async (req: Request<UserId>, res: Response) => {
+export const get_user_by_id_ctl = async (req: Request<UserId>, res: Response) => {
   try {
     const { id } = req.params;
 
