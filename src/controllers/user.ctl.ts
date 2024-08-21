@@ -63,3 +63,35 @@ export const get_auth_user_ctl = async (req: Request, res: Response) => {
     return errorResponder(res, error);
   }
 };
+
+export const get_by_username = async (req: Request<Pick<UserI, 'username'>>, res: Response) => {
+  try {
+    const { username } = req.params;
+
+    const user = await UserModel.findOne({ username: username }).lean();
+
+    if (!user) {
+      return customErrorHandler(res, { code: 404, message: 'Username does not exist' });
+    }
+
+    return successResponder(res, user);
+  } catch (error) {
+    return errorResponder(res, error);
+  }
+};
+
+export const check_available_username = async (req: Request<Pick<UserI, 'username'>>, res: Response) => {
+  try {
+    const { username } = req.params;
+
+    const user = await UserModel.findOne({ username: username }).lean();
+
+    if (user) {
+      return customErrorHandler(res, { code: 409, message: 'Username is already in use' });
+    }
+
+    return successResponder(res, { code: 200, message: 'Username is available' });
+  } catch (error) {
+    return errorResponder(res, error);
+  }
+};
