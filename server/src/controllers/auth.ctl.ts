@@ -3,11 +3,11 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { successResponder, errorResponder, customErrorHandler } from '@/common/http-responder';
 import { JWT_SECRET, JWT_EXPIRATION } from '@/common/config';
-import { LoginUser, SignUser } from '@/dtos/auth.dto';
+import { Login_dto, Signup_dto } from '@/dtos/auth.dto';
 import { AuthModel } from '@/models/auth.model';
 import { UserModel } from '@/models/user.model';
 
-export const signup_ctl = async (req: Request<unknown, unknown, SignUser>, res: Response) => {
+export const signup_ctl = async (req: Request<unknown, unknown, Signup_dto>, res: Response) => {
   try {
     const { password, confirmPassword, ...userData } = req.body;
 
@@ -34,7 +34,7 @@ export const signup_ctl = async (req: Request<unknown, unknown, SignUser>, res: 
   }
 };
 
-export const login_ctl = async (req: Request<unknown, unknown, LoginUser>, res: Response) => {
+export const login_ctl = async (req: Request<unknown, unknown, Login_dto>, res: Response) => {
   try {
     const { username, password } = req.body;
 
