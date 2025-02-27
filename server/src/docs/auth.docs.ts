@@ -1,9 +1,6 @@
-import { FromSchema } from 'json-schema-to-ts';
-import { OpenAPIV3 } from 'openapi-types';
-import { typeAssert } from '@/common/asserts';
-import { Equals } from '@/types/utils';
 import { oapi } from '@/common/config/docs.config';
-import { Signup_dto, Login_dto } from '@/dtos/auth.dto';
+import { SignupDto, LoginDto } from '@/dtos/auth.dto';
+import { dtoToJsonSchema } from '@/common/dto-to-jsonschema';
 
 oapi.component('schemas', 'BaseResponse', {
   type: 'object',
@@ -12,24 +9,11 @@ oapi.component('schemas', 'BaseResponse', {
   properties: {
     isError: { type: 'boolean', example: false },
     context: { type: 'string', example: 'ok' },
-    message: { type: 'string', example: '' },
+    message: { type: 'string', example: 'Success' },
   },
 });
 
-export const SignupDocSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['username', 'role', 'password', 'confirmPassword'] as const,
-  properties: {
-    username: { type: 'string' },
-    role: { type: 'string', enum: ['USER', 'ADMIN'] as const },
-    password: { type: 'string' },
-    confirmPassword: { type: 'string' },
-  },
-} satisfies OpenAPIV3.SchemaObject;
-oapi.component('schemas', 'Signup_dto', SignupDocSchema);
-typeAssert<Equals<FromSchema<typeof SignupDocSchema>, Signup_dto>>();
-
+oapi.component('schemas', 'Signup_dto', dtoToJsonSchema(SignupDto));
 oapi.component('schemas', 'SignupResponse', {
   allOf: [
     {
@@ -43,7 +27,7 @@ oapi.component('schemas', 'SignupResponse', {
         payload: {
           type: 'object',
           additionalProperties: false,
-          required: ['token', 'resource'],
+          required: ['token', 'user'],
           properties: {
             token: {
               type: 'string',
@@ -52,36 +36,8 @@ oapi.component('schemas', 'SignupResponse', {
               example:
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2YwNDExNjYyMDYyNGI5Y2JkYTlmMiIsImlhdCI6MTczMjE4MzA1NywiZXhwIjoxNzM2NTAzMDU3fQ.tcoCg6FydyCxiABj5-i_0BZ2jFBy3LZthkV1dRAuqA0',
             },
-            resource: {
-              type: 'object',
-              additionalProperties: false,
-              required: ['username', 'role', 'isVerified', 'address', '_id', 'createdAt', 'updatedAt', '__v'],
-              properties: {
-                username: { type: 'string', example: 'Wazza' },
-                role: { type: 'string', enum: ['USER', 'ADMIN'], example: 'ADMIN' },
-                isVerified: { type: 'boolean', example: false },
-                address: {
-                  type: 'object',
-                  additionalProperties: false,
-                  properties: {
-                    street: { type: 'string' },
-                    city: { type: 'string' },
-                    state: { type: 'string' },
-                  },
-                },
-                _id: { type: 'string', example: '673f04116620624b9cbda9f2' },
-                createdAt: {
-                  type: 'string',
-                  format: 'date-time',
-                  example: '2024-11-21T09:57:37.557Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  format: 'date-time',
-                  example: '2024-11-21T09:57:37.557Z',
-                },
-                __v: { type: 'integer', example: 0 },
-              },
+            user: {
+              $ref: '#/components/schemas/UserDto',
             },
           },
         },
@@ -118,18 +74,7 @@ export const signup_doc = oapi.path({
   },
 });
 
-export const LoginDocSchema = {
-  type: 'object',
-  additionalProperties: false,
-  required: ['username', 'password'] as const,
-  properties: {
-    username: { type: 'string' },
-    password: { type: 'string' },
-  },
-} satisfies OpenAPIV3.SchemaObject;
-oapi.component('schemas', 'Login_dto', LoginDocSchema);
-typeAssert<Equals<FromSchema<typeof LoginDocSchema>, Login_dto>>();
-
+oapi.component('schemas', 'Login_dto', dtoToJsonSchema(LoginDto));
 oapi.component('schemas', 'LoginResponse', {
   allOf: [
     {
@@ -153,35 +98,7 @@ oapi.component('schemas', 'LoginResponse', {
                 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2YwNDExNjYyMDYyNGI5Y2JkYTlmMiIsInVzZXJuYW1lIjoiV2F6emEiLCJpYXQiOjE3MzIxOTkzOTAsImV4cCI6MTczNjUxOTM5MH0.Qk_AWAeKZGRYEEHAfgqkcD17x0jPBLB7ZMW9GMi-Xtc',
             },
             user: {
-              type: 'object',
-              additionalProperties: false,
-              required: ['_id', 'username', 'role', 'isVerified', 'address', 'createdAt', 'updatedAt', '__v'],
-              properties: {
-                _id: { type: 'string', example: '673f04116620624b9cbda9f2' },
-                username: { type: 'string', example: 'Wazza' },
-                role: { type: 'string', enum: ['USER', 'ADMIN'], example: 'ADMIN' },
-                isVerified: { type: 'boolean', example: false },
-                address: {
-                  type: 'object',
-                  additionalProperties: false,
-                  properties: {
-                    street: { type: 'string' },
-                    city: { type: 'string' },
-                    state: { type: 'string' },
-                  },
-                },
-                createdAt: {
-                  type: 'string',
-                  format: 'date-time',
-                  example: '2024-11-21T09:57:37.557Z',
-                },
-                updatedAt: {
-                  type: 'string',
-                  format: 'date-time',
-                  example: '2024-11-21T09:57:37.557Z',
-                },
-                __v: { type: 'integer', example: 0 },
-              },
+              $ref: '#/components/schemas/UserDto',
             },
           },
         },
