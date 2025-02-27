@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
-import { UserI, AccountType, USER_NAMESPACE } from '@/dtos/user.dto';
+import { User, AccountType, USER_NAMESPACE } from '@/dtos/user.dto';
 
 const { Schema } = mongoose;
 
-const UserSchema = new Schema<UserI>(
+const UserSchema = new Schema<User>(
   {
     username: { type: String, required: true, unique: true },
     role: {
