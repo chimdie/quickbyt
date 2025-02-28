@@ -1,31 +1,48 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodSchema } from 'zod';
-import { Exception } from '@/common/errors';
-import { errorResponder } from '@/common/http-responder';
+import { AnyZodObject } from 'zod';
+import { validationResponse } from '@/common/http-responder';
 
-type SchemaType<T> = ZodSchema<T>;
+export const validator = (opts?: { body?: AnyZodObject; params?: AnyZodObject; query?: AnyZodObject }) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const body = item_validator(opts?.body, req.body);
+    const params = item_validator(opts?.params, req.params);
+    const query = item_validator(opts?.query, req.query);
 
-export const dto_validator =
-  <T>(schema: SchemaType<T>) =>
-  (req: Request, _res: Response, next: NextFunction) => {
-    const dataToValidate = {
-      ...req.body,
-      ...req.params,
-      ...req.query,
-    };
+    let err: string[] = [];
+    const results = [body, params, query];
 
-    const reqResponse = schema.safeParse(dataToValidate);
-
-    if (!reqResponse.success) {
-      const errors = reqResponse.error.flatten();
-      const errorResponse = Object.entries(errors.fieldErrors).map(([key, value]: [any, any]) => ({
-        path: key,
-        message: value.length > 1 ? value.join(', ') : value[0],
-      }));
-
-      const errorStack = new Exception('VALIDATION_ERROR', 'Validation failed', errorResponse);
-      return errorResponder(_res, errorStack);
+    for (let i = 0; i < results.length; i++) {
+      const error = results[i][0];
+      if (error !== null) {
+        err = err.concat(error);
+      }
     }
-    req.body = reqResponse.data;
+
+    if (err.length) {
+      return validationResponse(res, err.at(0));
+    }
+
+    req.body = body[1];
+    req.params = params[1] as Request['params'];
+    req.query = query[1] as Request['query'];
+
     return next();
   };
+};
+
+function item_validator<T = unknown>(schema?: AnyZodObject, data?: T) {
+  if (!schema) {
+    return [null, data] as const;
+  }
+
+  const result = schema.strip().safeParse(data);
+
+  if (result.success) {
+    data = result.data as T;
+    return [null, result.data] as const;
+  }
+
+  const err = result.error.errors.map((e) => e.message);
+
+  return [err, null] as const;
+}
