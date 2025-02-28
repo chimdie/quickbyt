@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
-import { PRODUCT_NAMESPACE, ProductI, product_category } from '@/dtos/product.dto';
+import { PRODUCT_NAMESPACE, ProductDto } from '@/dtos/product.dto';
 
 const { Schema } = mongoose;
 
-const ProductSchema = new Schema<ProductI>(
+const ProductSchema = new Schema<ProductDto>(
   {
     name: { type: String, required: true, unique: true },
     price: { type: String, required: true },
     description: { type: String },
-    category: { type: String, enum: product_category, required: true },
+    category: { type: String, enum: ['FRUITS', 'VEGETABLES', 'GRAINS', 'MEAT'], required: true },
     image: { type: String },
     isAvailable: { type: Boolean, default: true },
   },
