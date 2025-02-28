@@ -3,7 +3,7 @@ import { authRouter } from './auth.routes';
 import { userRouter } from './user.routes';
 import { authenticate } from '@/middleware/authenticate';
 import { product_router } from './product.routes';
-import { cart_router } from './cart.routes';
+import { cartRouter } from './cart.routes';
 import { oapi } from '@/common/config/docs.config';
 import { docsRouter } from './docs.routes';
 
@@ -13,7 +13,7 @@ routerV1.use('/docs', docsRouter);
 routerV1.use('/auth', authRouter);
 routerV1.use('/users', userRouter);
 routerV1.use('/products', [authenticate], product_router);
-routerV1.use('/cart', [authenticate], cart_router);
+routerV1.use('/cart', [authenticate], cartRouter);
 
 routerV1.get(
   '/docs',

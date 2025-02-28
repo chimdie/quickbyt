@@ -4,7 +4,7 @@ import { Types } from 'mongoose';
 
 export const CART_NAMESPACE = 'Cart';
 
-export const cart_dto = z.object({
+export const CartDto = z.object({
   quantity: z.number(),
   product: z
     .string()
@@ -26,19 +26,16 @@ export const cart_dto = z.object({
     }),
 });
 
-export const add_cart_dto = cart_dto.pick({
+export const AddToCartDto = CartDto.pick({
   product: true,
   quantity: true,
   user: true,
 });
 
-export const cart_id_dto = z
-  .string()
-  .refine(validator.isMongoId)
-  .transform((id) => {
-    return new Types.ObjectId(id);
-  });
+export const CartIdIDto = z.object({
+  id: z.string().refine(validator.isMongoId),
+});
 
-export type CartIdI = z.infer<typeof cart_id_dto>;
-export type CartI = z.infer<typeof cart_dto>;
-export type AddCartI = z.infer<typeof add_cart_dto>;
+export type CartIdIDto = z.infer<typeof CartIdIDto>;
+export type CartDto = z.infer<typeof CartDto>;
+export type AddToCartDto = z.infer<typeof AddToCartDto>;
