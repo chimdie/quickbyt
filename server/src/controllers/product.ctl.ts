@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { ProductModel } from '@/models/product.model';
-import { CreateProductI, ProductId } from '@/dtos/product.dto';
+import { CreateProductDto, ProductDto, ProductIdDto, UpdateProductDto } from '@/dtos/product.dto';
 import { customErrorHandler, errorResponder, successResponder } from '@/common/http-responder';
 
-export const get_products = async (_req: Request, res: Response) => {
+export const getProductsCtl = async (_req: Request, res: Response<ProductDto[]>) => {
   try {
     const products = await ProductModel.find();
 
@@ -13,7 +13,7 @@ export const get_products = async (_req: Request, res: Response) => {
   }
 };
 
-export const create_product_ctl = async (req: Request<unknown, unknown, CreateProductI>, res: Response) => {
+export const createProductCtl = async (req: Request<unknown, unknown, CreateProductDto>, res: Response) => {
   try {
     const product = await ProductModel.create(req.body);
 
@@ -23,7 +23,7 @@ export const create_product_ctl = async (req: Request<unknown, unknown, CreatePr
   }
 };
 
-export const get_product_by_id = async (req: Request<ProductId>, res: Response) => {
+export const getProductByIdCtl = async (req: Request<ProductIdDto>, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -39,7 +39,10 @@ export const get_product_by_id = async (req: Request<ProductId>, res: Response) 
   }
 };
 
-export const update_product = async (req: Request<ProductId, unknown, CreateProductI>, res: Response) => {
+export const updateProductCtl = async (
+  req: Request<ProductIdDto, unknown, UpdateProductDto>,
+  res: Response
+) => {
   try {
     const { id } = req.params;
     const payload = { ...req.body };

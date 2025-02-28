@@ -110,3 +110,5 @@ swagger_output.json
 
 
 uploads/
+
+.DS_Store

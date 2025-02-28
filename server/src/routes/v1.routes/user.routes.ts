@@ -1,16 +1,24 @@
 import { Router } from 'express';
 import {
-  get_auth_user_ctl,
-  get_user_by_id_ctl,
-  get_users_ctl,
-  get_by_username,
-  check_available_username,
+  getAuthUserCtl,
+  getUserByIdCtl,
+  getUsersCtl,
+  getByUsername,
+  checkAvailableUsername,
 } from '@/controllers/user.ctl';
+import { validator } from '@/middleware/dto_validor';
+import { UserIdDto, UsernameDto } from '@/dtos/user.dto';
+import { getUsernameDocs, getUsersDocs, getUserByIdDoc, getUserProfileDoc } from '@/docs/user.docs';
 
 export const userRouter = Router();
 
-userRouter.get('/username/:username', get_by_username);
-userRouter.get('/username/check/:username', check_available_username);
-userRouter.get('/me', get_auth_user_ctl);
-userRouter.get('/:id', get_user_by_id_ctl);
-userRouter.get('/', get_users_ctl);
+userRouter.get('/', getUsersDocs, getUsersCtl);
+userRouter.get('/username/:username', validator({ params: UsernameDto }), getUsernameDocs, getByUsername);
+userRouter.get(
+  '/username/check/:username',
+  validator({ params: UsernameDto }),
+  getUsernameDocs,
+  checkAvailableUsername
+);
+userRouter.get('/me', getUserProfileDoc, getAuthUserCtl);
+userRouter.get('/:id', validator({ params: UserIdDto }), getUserByIdDoc, getUserByIdCtl);

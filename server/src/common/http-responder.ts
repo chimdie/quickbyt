@@ -57,3 +57,10 @@ export function customErrorHandler(
     payload: null,
   });
 }
+
+export const validationResponse = (res: Response, msg?: string, error?: string) => {
+  res.status(400).json({
+    message: msg ?? 'Bad Request',
+    error: error ?? 'ValidationError',
+  });
+};

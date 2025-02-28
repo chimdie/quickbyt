@@ -1,23 +1,18 @@
 import { z, enum as _enum } from 'zod';
-import { user_dto } from '@/dtos/user.dto';
+import { User } from '@/dtos/user.dto';
 
-export const signup_dto = user_dto
-  .pick({
-    username: true,
-    role: true,
-    password: true,
-    confirmPassword: true,
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    path: ['confirmPassword'],
-    message: 'Passwords do not match',
-  });
+export const SignupDto = User.pick({
+  username: true,
+  role: true,
+  password: true,
+  confirmPassword: true,
+});
 
-export type SignUser = z.infer<typeof signup_dto>;
+export type SignupDto = z.infer<typeof SignupDto>;
 
-export const login_dto = user_dto.pick({
+export const LoginDto = User.pick({
   username: true,
   password: true,
 });
 
-export type LoginUser = z.infer<typeof login_dto>;
+export type LoginDto = z.infer<typeof LoginDto>;

@@ -2,11 +2,12 @@ import express, { Express, NextFunction, Request, Response } from 'express';
 import { routerV1 } from '@/routes/v1.routes';
 import { Errors } from '@/common/errors';
 import { errorResponder, customErrorHandler } from '@/common/http-responder';
+import { oapi } from './common/config/docs.config';
 
 export function server(app: Express) {
   app.use(express.json());
-
   app.use(express.urlencoded({ extended: true }));
+  app.use(oapi);
 
   app.get('/health', (_request: Request, response: Response) => {
     response.status(200).json({ status: 'ok' });

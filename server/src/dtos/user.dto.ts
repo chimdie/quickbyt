@@ -1,6 +1,5 @@
-import { z, enum as _enum } from 'zod';
+import { z } from 'zod';
 import validator from 'validator';
-import { Types } from 'mongoose';
 
 export const USER_NAMESPACE: string = 'User';
 
@@ -11,19 +10,14 @@ export const AccountType = {
 
 export type AccountType = (typeof AccountType)[keyof typeof AccountType];
 
-export const user_dto = z.object({
+export const User = z.object({
   username: z
     .string({ required_error: 'Username is required', invalid_type_error: 'Username must be a string' })
     .trim()
     .min(3, 'Username must not be empty'),
-  role: _enum([AccountType.USER, AccountType.ADMIN]).default(AccountType.USER),
+  role: z.union([z.literal(AccountType.USER), z.literal(AccountType.ADMIN)]),
   isVerified: z.boolean(),
-  _id: z
-    .string()
-    .refine(validator.isMongoId)
-    .transform((id) => {
-      return new Types.ObjectId(id);
-    }),
+  _id: z.string().refine(validator.isMongoId),
   password: z.string({
     required_error: 'Password is required',
   }),
@@ -39,15 +33,23 @@ export const user_dto = z.object({
   }),
 });
 
-export type UserI = z.infer<typeof user_dto>;
+export type User = z.infer<typeof User>;
 
-export const user_id_dto = z.object({
-  id: z
-    .string()
-    .refine(validator.isMongoId)
-    .transform((id) => {
-      return new Types.ObjectId(id);
-    }),
+export const UserDto = User.omit({
+  password: true,
+  confirmPassword: true,
 });
 
-export type UserId = z.infer<typeof user_id_dto>;
+export type UserDto = z.infer<typeof UserDto>;
+
+export const UserIdDto = z.object({
+  id: z.string().refine(validator.isMongoId),
+});
+
+export type UserIdDto = z.infer<typeof UserIdDto>;
+
+export const UsernameDto = User.pick({
+  username: true,
+});
+
+export type UsernameDto = z.infer<typeof UsernameDto>;

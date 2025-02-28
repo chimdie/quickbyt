@@ -7,11 +7,11 @@ export const PRODUCT_NAMESPACE: string = 'Product';
 // TODO: To be updated
 export const product_category = ['fruits', 'vegetables', 'grains', 'meat', 'seafood'] as const;
 
-export const product_dto = z.object({
+export const ProductDto = z.object({
   name: z.string(),
   price: z.string(),
   description: z.string(),
-  category: z.enum(product_category),
+  category: z.enum(['FRUITS', 'VEGETABLES', 'GRAINS', 'MEAT']),
   createdAt: z.string(),
   updatedAt: z.string(),
   image: z.string(),
@@ -24,23 +24,22 @@ export const product_dto = z.object({
     }),
 });
 
-export type ProductI = z.infer<typeof product_dto>;
+export type ProductDto = z.infer<typeof ProductDto>;
 
-export const create_product_dto = product_dto.pick({
+export const CreateProductDto = ProductDto.pick({
   name: true,
   price: true,
   description: true,
   category: true,
 });
 
-export type CreateProductI = z.infer<typeof create_product_dto>;
+export type CreateProductDto = z.infer<typeof CreateProductDto>;
 
-export const product_id_dto = z
-  .string()
-  .refine(validator.isMongoId)
-  .transform((id) => {
-    console.log({ id });
-    return new Types.ObjectId(id);
-  });
+export const ProductIdDto = z.object({
+  id: z.string().refine(validator.isMongoId),
+});
 
-export type ProductId = z.infer<typeof product_id_dto>;
+export type ProductIdDto = z.infer<typeof ProductIdDto>;
+
+export const UpdateProductDto = ProductDto.partial();
+export type UpdateProductDto = z.infer<typeof UpdateProductDto>;

@@ -1,9 +1,9 @@
 import { Request, Response } from 'express';
 import { customErrorHandler, errorResponder, successResponder } from '@/common/http-responder';
 import { CartModel } from '@/models/cart.model';
-import { AddCartI, CartI, CartIdI } from '@/dtos/cart.dto';
+import { AddToCartDto, CartIdIDto } from '@/dtos/cart.dto';
 
-export const get_cart = async (req: Request<CartI>, res: Response) => {
+export const getCartCtl = async (req: Request, res: Response) => {
   try {
     let userId = req.user?._id;
 
@@ -15,7 +15,7 @@ export const get_cart = async (req: Request<CartI>, res: Response) => {
   }
 };
 
-export const add_to_cart = async (req: Request<unknown, unknown, AddCartI>, res: Response) => {
+export const addToCartCtl = async (req: Request<unknown, unknown, AddToCartDto>, res: Response) => {
   const { product, quantity } = req.body;
   const userId = req.user?._id;
 
@@ -28,7 +28,7 @@ export const add_to_cart = async (req: Request<unknown, unknown, AddCartI>, res:
   return successResponder(res, cart);
 };
 
-export const remove_item = async (req: Request<CartIdI>, res: Response) => {
+export const removeItemCtl = async (req: Request<CartIdIDto>, res: Response) => {
   try {
     const { id } = req.params;
 

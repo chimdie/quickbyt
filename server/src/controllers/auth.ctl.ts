@@ -3,38 +3,38 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { successResponder, errorResponder, customErrorHandler } from '@/common/http-responder';
 import { JWT_SECRET, JWT_EXPIRATION } from '@/common/config';
-import { LoginUser, SignUser } from '@/dtos/auth.dto';
+import { LoginDto, SignupDto } from '@/dtos/auth.dto';
 import { AuthModel } from '@/models/auth.model';
 import { UserModel } from '@/models/user.model';
 
-export const signup_ctl = async (req: Request<unknown, unknown, SignUser>, res: Response) => {
+export const signupCtl = async (req: Request<unknown, unknown, SignupDto>, res: Response) => {
   try {
     const { password, confirmPassword, ...userData } = req.body;
 
-    const user = await UserModel.findOne({ username: userData.username });
+    const existingUser = await UserModel.findOne({ username: userData.username });
 
-    if (user) {
+    if (existingUser) {
       return customErrorHandler(res, { name: 'BAD REQUEST', message: 'User already exists', code: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(password, 12);
 
-    const resource = await UserModel.create(userData);
+    const user = await UserModel.create(userData);
 
     await AuthModel.create({
       hash: hashedPassword,
-      userId: resource._id,
+      userId: user._id,
     });
 
-    const token = jwt.sign({ id: resource._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
+    const token = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: JWT_EXPIRATION });
 
-    return successResponder(res, { token, resource });
+    return successResponder(res, { token, user });
   } catch (error: any) {
     return errorResponder(res, error);
   }
 };
 
-export const login_ctl = async (req: Request<unknown, unknown, LoginUser>, res: Response) => {
+export const loginCtl = async (req: Request<unknown, unknown, LoginDto>, res: Response) => {
   try {
     const { username, password } = req.body;
 
