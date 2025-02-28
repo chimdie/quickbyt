@@ -13,7 +13,7 @@ oapi.component('schemas', 'BaseResponse', {
   },
 });
 
-oapi.component('schemas', 'Signup_dto', dtoToJsonSchema(SignupDto));
+oapi.component('schemas', 'SignupDto', dtoToJsonSchema(SignupDto));
 oapi.component('schemas', 'SignupResponse', {
   allOf: [
     {
@@ -55,7 +55,7 @@ export const signup_doc = oapi.path({
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/Signup_dto',
+          $ref: '#/components/schemas/SignupDto',
         },
       },
     },
@@ -74,7 +74,7 @@ export const signup_doc = oapi.path({
   },
 });
 
-oapi.component('schemas', 'Login_dto', dtoToJsonSchema(LoginDto));
+oapi.component('schemas', 'LoginDto', dtoToJsonSchema(LoginDto));
 oapi.component('schemas', 'LoginResponse', {
   allOf: [
     {
@@ -116,7 +116,7 @@ export const login_doc = oapi.path({
     content: {
       'application/json': {
         schema: {
-          $ref: '#/components/schemas/Login_dto',
+          $ref: '#/components/schemas/LoginDto',
         },
       },
     },
