@@ -2,7 +2,6 @@ import React, {useState} from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   StyleSheet,
   Keyboard,
@@ -12,6 +11,7 @@ import {
 import {SafeAreaView} from '@/components/ui/SafeAreaView';
 import {Colors} from '@/constants/Colors';
 import {Link, router} from 'expo-router';
+import {TextInput} from '@/components/TextInput';
 
 export default function LoginScreen() {
   // const windowHeight = useWindowDimensions().height;
@@ -29,17 +29,13 @@ export default function LoginScreen() {
           <Text style={styles.title}>Enter your login credentials</Text>
           <View style={{flex: 1}}>
             <TextInput
-              style={styles.input}
               placeholder="Username"
-              placeholderTextColor="#888"
               value={username ?? ''}
               onChangeText={setUsername}
             />
 
             <TextInput
-              style={styles.input}
               placeholder="Password"
-              placeholderTextColor="#888"
               autoCapitalize="none"
               value={password ?? ''}
               onChangeText={setPassword}
@@ -90,17 +86,8 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginBottom: 20,
   },
-  input: {
-    backgroundColor: '#F5F5F5',
-    paddingVertical: 15,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    marginBottom: 15,
-    fontSize: 16,
-    borderWidth: 0.2,
-  },
   termsText: {
-    color: '#aaa',
+    color: Colors.termsColor,
     fontSize: 12,
     textAlign: 'center',
     marginTop: 20,
@@ -118,12 +105,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary.main,
   },
   buttonDisabled: {
-    backgroundColor: '#444',
+    backgroundColor: Colors.disabled,
     opacity: 0.5,
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
+    color: '#FFF',
   },
   bottomContainer: {
     marginBottom: 20,
