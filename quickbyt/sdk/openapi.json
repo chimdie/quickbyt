@@ -1,0 +1,951 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Quickbyt server",
+    "version": "1.0.0",
+    "description": "Quickbyt server documentation"
+  },
+  "paths": {
+    "/v1/auth/login": {
+      "post": {
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/signup": {
+      "post": {
+        "tags": ["Authentication"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignupDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SignupResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/": {
+      "get": {
+        "tags": ["User"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllUsersDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/username/{username}": {
+      "get": {
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Username_dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByUsername"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/users/username/check/{username}": {
+      "get": {
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Username_dto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByUsername"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/users/me": {
+      "get": {
+        "tags": ["User"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/users/{id}": {
+      "get": {
+        "tags": ["User"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserIdDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserByIdResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/products/": {
+      "get": {
+        "tags": ["Product"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAllProductsDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Product"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewProductDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/products/{id}": {
+      "get": {
+        "tags": ["Product"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProductIdDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductDto"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "tags": ["Product"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateProductResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/cart/": {
+      "get": {
+        "tags": ["Cart"],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetUserCartDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddToCartDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddToCartResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/cart/{id}": {
+      "delete": {
+        "tags": ["Cart"],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CartIdIDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddToCartResponse"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/v1/docs": {
+      "get": {
+        "summary": "",
+        "responses": {
+          "200": {
+            "description": "We Live!"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseResponse": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["isError", "context", "message"],
+        "properties": {
+          "isError": {
+            "type": "boolean",
+            "example": false
+          },
+          "context": {
+            "type": "string",
+            "example": "ok"
+          },
+          "message": {
+            "type": "string",
+            "example": "Success"
+          }
+        }
+      },
+      "SignupDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["USER"]
+              },
+              {
+                "type": "string",
+                "enum": ["ADMIN"]
+              }
+            ]
+          },
+          "password": {
+            "type": "string"
+          },
+          "confirmPassword": {
+            "type": "string"
+          }
+        },
+        "required": ["username", "role", "password", "confirmPassword"],
+        "additionalProperties": false
+      },
+      "SignupResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["token", "user"],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "format": "jwt",
+                    "pattern": "^[\\w-]+\\.[\\w-]+\\.[\\w-]+$",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2YwNDExNjYyMDYyNGI5Y2JkYTlmMiIsImlhdCI6MTczMjE4MzA1NywiZXhwIjoxNzM2NTAzMDU3fQ.tcoCg6FydyCxiABj5-i_0BZ2jFBy3LZthkV1dRAuqA0"
+                  },
+                  "user": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": ["username", "password"],
+        "additionalProperties": false
+      },
+      "LoginResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["token", "user"],
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "format": "jwt",
+                    "pattern": "^[\\w-]+\\.[\\w-]+\\.[\\w-]+$",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3M2YwNDExNjYyMDYyNGI5Y2JkYTlmMiIsInVzZXJuYW1lIjoiV2F6emEiLCJpYXQiOjE3MzIxOTkzOTAsImV4cCI6MTczNjUxOTM5MH0.Qk_AWAeKZGRYEEHAfgqkcD17x0jPBLB7ZMW9GMi-Xtc"
+                  },
+                  "user": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3
+          },
+          "role": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": ["USER"]
+              },
+              {
+                "type": "string",
+                "enum": ["ADMIN"]
+              }
+            ]
+          },
+          "isVerified": {
+            "type": "boolean"
+          },
+          "_id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": {
+                "type": "string"
+              },
+              "city": {
+                "type": "string"
+              },
+              "state": {
+                "type": "string"
+              }
+            },
+            "required": ["street", "city", "state"],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "username",
+          "role",
+          "isVerified",
+          "_id",
+          "createdAt",
+          "updatedAt",
+          "address"
+        ],
+        "additionalProperties": false
+      },
+      "GetAllUsersDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UserProfile": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Success"
+              },
+              "payload": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          }
+        ]
+      },
+      "UserIdDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": ["id"],
+        "additionalProperties": false
+      },
+      "GetUserByIdResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          }
+        ]
+      },
+      "Username_dto": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "minLength": 3
+          }
+        },
+        "required": ["username"],
+        "additionalProperties": false
+      },
+      "GetUserByUsername": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/UserDto"
+              }
+            }
+          }
+        ]
+      },
+      "ProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["FRUITS", "VEGETABLES", "GRAINS", "MEAT"]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "default": true
+          },
+          "_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "price",
+          "description",
+          "category",
+          "createdAt",
+          "updatedAt",
+          "image",
+          "_id"
+        ],
+        "additionalProperties": false
+      },
+      "GetAllProductsDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ProductDto"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "CreateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["FRUITS", "VEGETABLES", "GRAINS", "MEAT"]
+          }
+        },
+        "required": ["name", "price", "description", "category"],
+        "additionalProperties": false
+      },
+      "NewProductDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/ProductDto"
+              }
+            }
+          }
+        ]
+      },
+      "ProductIdDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": ["id"],
+        "additionalProperties": false
+      },
+      "GetProductByIdDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/ProductDto"
+              }
+            }
+          }
+        ]
+      },
+      "UpdateProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "price": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["FRUITS", "VEGETABLES", "GRAINS", "MEAT"]
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "isAvailable": {
+            "type": "boolean",
+            "default": true
+          },
+          "_id": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateProductResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/ProductDto"
+              }
+            }
+          }
+        ]
+      },
+      "CartDto": {
+        "type": "object",
+        "properties": {
+          "quantity": {
+            "type": "number"
+          },
+          "product": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "_id": {
+            "type": "string"
+          }
+        },
+        "required": ["quantity", "product", "user", "_id"],
+        "additionalProperties": false
+      },
+      "GetUserCartDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/CartDto"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AddToCartDto": {
+        "type": "object",
+        "properties": {
+          "product": {
+            "type": "string"
+          },
+          "quantity": {
+            "type": "number"
+          },
+          "user": {
+            "type": "string"
+          }
+        },
+        "required": ["product", "quantity", "user"],
+        "additionalProperties": false
+      },
+      "AddToCartResponse": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseResponse"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["payload"],
+            "properties": {
+              "payload": {
+                "$ref": "#/components/schemas/CartDto"
+              }
+            }
+          }
+        ]
+      },
+      "CartIdIDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": ["id"],
+        "additionalProperties": false
+      }
+    }
+  }
+}
