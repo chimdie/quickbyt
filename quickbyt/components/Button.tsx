@@ -15,12 +15,19 @@ import {Colors} from '@/constants/Colors';
 const variants = {
   PRIMARY: {
     box: Colors.primary.main,
+    text: '#FFFFFF',
+    spinner: '#FFFFFF',
   },
   DISABLED: {
     box: Colors.disabled,
+    text: '#FFFFFF',
+    spinner: '#FFFFFF',
   },
   LIGHT: {
     box: '#FFFFFF',
+    text: Colors.primary.main,
+    spinner: Colors.primary.main,
+    borderColor: Colors.primary.light,
   },
 };
 
@@ -32,6 +39,8 @@ type ButtonT = {
   variant?: Variant;
   style?: StyleProp<ViewStyle>;
   textStyle?: StyleProp<TextStyle>;
+  prefixIcon?: React.ReactNode;
+  suffixIcon?: React.ReactNode;
 } & Omit<ButtonProps, 'title'>;
 
 export function Button({
@@ -41,36 +50,45 @@ export function Button({
   style,
   textStyle,
   isLoading,
+  prefixIcon,
+  suffixIcon,
   ...rest
 }: ButtonT) {
   const activeVariant = disabled ? 'DISABLED' : variant;
+  const variantStyles = variants[activeVariant];
 
   return (
     <TouchableOpacity
       {...rest}
       style={[
-        style,
         styles.button,
+        {backgroundColor: variantStyles.box},
+        activeVariant === 'LIGHT' && {
+          borderWidth: 1,
+          borderColor: Colors.primary.light,
+        },
+        style,
         disabled && {opacity: 0.5},
-        {backgroundColor: variants[activeVariant].box},
       ]}
       disabled={disabled}>
       <View style={styles.contentWrapper}>
+        {prefixIcon}
         <Text
           style={[
-            textStyle,
             styles.buttonText,
-            {color: '#FFF', opacity: isLoading ? 0.5 : 1},
+            {color: variantStyles.text, opacity: isLoading ? 0.5 : 1},
+            textStyle,
           ]}>
           {title}
         </Text>
         {isLoading && (
           <ActivityIndicator
             size="small"
-            color="#FFF"
+            color={variantStyles.spinner}
             style={styles.spinnerOverlay}
           />
         )}
+        {suffixIcon}
       </View>
     </TouchableOpacity>
   );
@@ -88,6 +106,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+    flexDirection: 'row',
+    gap: 8,
   },
   spinnerOverlay: {
     position: 'absolute',
