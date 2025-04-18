@@ -7,8 +7,10 @@ import {StoredKeys} from '@/constants/keys';
 type InitialAuthState = {
   token: string | null;
   user: UserDto | null;
+  hasHydrated: boolean;
   setUser: (user: {token: string; user: UserDto}) => void;
   resetUser: () => void;
+  setHasHydrated: (hydrated: boolean) => void;
 };
 
 export const useAuthStore = create<InitialAuthState>()(
@@ -16,12 +18,17 @@ export const useAuthStore = create<InitialAuthState>()(
     set => ({
       token: null,
       user: null,
+      hasHydrated: false,
       setUser: ({token, user}) => set({token, user}),
       resetUser: () => set({token: null, user: null}),
+      setHasHydrated: hydrated => set({hasHydrated: hydrated}),
     }),
     {
       name: StoredKeys['auth-user'],
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => state => {
+        state?.setHasHydrated(true);
+      },
     },
   ),
 );

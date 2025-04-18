@@ -1,4 +1,3 @@
-import {DarkTheme, DefaultTheme, ThemeProvider} from '@react-navigation/native';
 import {useFonts} from 'expo-font';
 import {Stack} from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -11,7 +10,7 @@ import {
 } from 'react-native-safe-area-context';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 
-import {useColorScheme} from '@/hooks/useColorScheme';
+import {useAuthStore} from '@/store/useAuthStore';
 
 const queryClient = new QueryClient();
 
@@ -19,32 +18,48 @@ const queryClient = new QueryClient();
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+  // const [isAppReady, setIsAppReady] = useState<boolean>(false);
+  const {token, hasHydrated} = useAuthStore();
 
   useEffect(() => {
-    if (loaded) {
+    if (loaded && hasHydrated) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded, hasHydrated]);
 
-  if (!loaded) {
+  if (!loaded || !hasHydrated) {
     return null;
   }
 
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <ThemeProvider
-          value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack screenOptions={{headerShown: false}}>
-            <Stack.Screen name="(tabs)" options={{headerShown: false}} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+        <Stack
+          screenOptions={{headerShown: false}}
+          initialRouteName={token ? '(tabs)' : 'index'}>
+          <Stack.Screen
+            name="index"
+            redirect={!!token}
+            options={{
+              animation: 'fade',
+              animationDuration: 0,
+              animationTypeForReplace: 'push',
+            }}
+          />
+          <Stack.Screen
+            name="(tabs)"
+            options={{
+              animation: 'fade',
+              animationDuration: 0,
+              animationTypeForReplace: 'push',
+            }}
+          />
+          <Stack.Screen name="+not-found" />
+        </Stack>
+        <StatusBar style="auto" />
       </SafeAreaProvider>
     </QueryClientProvider>
   );
