@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   selected: {
-    backgroundColor: '#FFE8E8',
+    backgroundColor: Colors.primary.light,
   },
   image: {
     width: 50,

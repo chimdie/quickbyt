@@ -25,12 +25,13 @@ export const Colors = {
   },
   primary: {
     main: '#FF6B6B',
-    light: '#666',
+    light: '#FFE8E8',
   },
   background: '#F8F8F8',
   grey: {
     100: '#EEE',
     200: '#888',
+    250: '#666',
     300: '#333',
   },
   disabled: '#444',
