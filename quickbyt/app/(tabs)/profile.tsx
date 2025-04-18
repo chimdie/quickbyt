@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -6,6 +6,7 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {
   User,
@@ -21,11 +22,31 @@ import {SafeAreaView} from '@/components/ui/SafeAreaView';
 import {ProfileMenuItem} from '@/components/ProfileMenuItem';
 import {userData} from '@/data/mockData';
 import {Colors} from '@/constants/Colors';
+import {Button} from '@/components/Button';
+import {useAuthStore} from '@/store/useAuthStore';
+import {router} from 'expo-router';
 
 export default function ProfileScreen() {
+  const {user, resetUser} = useAuthStore();
+  const [loading, setLoading] = useState(false);
+
   const handleMenuItemPress = (action: string) => {
     console.log(`${action} pressed`);
     // Handle navigation or action
+  };
+
+  const handleLogout = async () => {
+    setLoading(true);
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      resetUser();
+      router.replace('/auth/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -46,8 +67,7 @@ export default function ProfileScreen() {
           </View>
         )}
         <View style={styles.profileInfo}>
-          <Text style={styles.name}>{userData.name}</Text>
-          <Text style={styles.email}>{userData.email}</Text>
+          <Text style={styles.name}>{user?.username || ''}</Text>
         </View>
         <TouchableOpacity style={styles.editButton}>
           <Text style={styles.editButtonText}>Edit</Text>
@@ -93,13 +113,24 @@ export default function ProfileScreen() {
             onPress={() => handleMenuItemPress('Help & Support')}
           />
         </View>
-
-        <TouchableOpacity
-          style={styles.logoutButton}
-          onPress={() => handleMenuItemPress('Logout')}>
-          <LogOut size={20} color={Colors.primary.main} />
-          <Text style={styles.logoutText}>Logout</Text>
-        </TouchableOpacity>
+        <View style={styles.logoutButton}>
+          <Button
+            title="Logout"
+            variant="LIGHT"
+            prefixIcon={<LogOut size={20} color={Colors.primary.main} />}
+            isLoading={loading}
+            onPress={() => {
+              Alert.alert('Logout', 'Are you sure you want to logout', [
+                {text: 'No', isPreferred: true, style: 'cancel'},
+                {
+                  text: 'Yes',
+                  style: 'destructive',
+                  onPress: handleLogout,
+                },
+              ]);
+            }}
+          />
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
@@ -117,7 +148,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.grey[300],
   },
   profileSection: {
     flexDirection: 'row',
@@ -153,17 +184,17 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.grey[300],
     marginBottom: 4,
   },
   email: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
   },
   editButton: {
     paddingHorizontal: 12,
     paddingVertical: 6,
-    backgroundColor: '#FFE8E8',
+    backgroundColor: Colors.primary.light,
     borderRadius: 8,
   },
   editButtonText: {
@@ -172,31 +203,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   section: {
-    marginHorizontal: 20,
-    marginTop: 24,
+    margin: 20,
+    gap: 12,
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 12,
+    color: Colors.grey[300],
   },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
     marginHorizontal: 20,
-    marginVertical: 30,
-    paddingVertical: 16,
-    backgroundColor: '#FFF',
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#FFE8E8',
   },
-  logoutText: {
-    marginLeft: 8,
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.primary.main,
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    // alignItems: 'center',
   },
 });
