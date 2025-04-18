@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginBottom: 12,
     lineHeight: 20,
   },

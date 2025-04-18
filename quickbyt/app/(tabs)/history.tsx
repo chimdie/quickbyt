@@ -148,11 +148,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#F0F0F0',
   },
   activeTab: {
-    backgroundColor: '#FFE8E8',
+    backgroundColor: Colors.primary.light,
   },
   tabText: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
   },
   activeTabText: {
     color: Colors.primary.main,
@@ -169,6 +169,6 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 16,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
   },
 });

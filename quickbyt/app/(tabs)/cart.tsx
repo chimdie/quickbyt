@@ -131,11 +131,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.grey[300],
   },
   itemCount: {
     fontSize: 16,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginTop: 4,
   },
   cartList: {
@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
   totalLabel: {
     fontSize: 18,
     fontWeight: '600',
-    color: '#333',
+    color: Colors.grey[300],
   },
   totalAmount: {
     fontSize: 20,
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     fontSize: 18,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginBottom: 20,
   },
   shopButton: {

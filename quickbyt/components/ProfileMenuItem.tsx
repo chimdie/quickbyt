@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginTop: 2,
   },
 });

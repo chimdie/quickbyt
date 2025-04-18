@@ -6,66 +6,144 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
-  useWindowDimensions,
 } from 'react-native';
+import {Link, router} from 'expo-router';
+import {useForm} from 'react-hook-form';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {Eye, EyeOff, Lock, User} from 'lucide-react-native';
+import {useMutation} from '@tanstack/react-query';
 import {SafeAreaView} from '@/components/ui/SafeAreaView';
 import {Colors} from '@/constants/Colors';
-import {router} from 'expo-router';
-import {TextInput} from '@/components/TextInput';
+import {TextInputWithControl} from '@/components/TextInput';
+import {SignupSchema} from '@/schema/auth.schema';
+import {ApiSDK} from '@/sdk';
+import {SignupDto} from '@/sdk/generated';
+import {useAuthStore} from '@/store/useAuthStore';
+import {apiErrorParser} from '@/utils/errorParser';
+import {Button} from '@/components/Button';
 
 export default function Signup() {
-  const windowHeight = useWindowDimensions().height;
-  const [username, setUsername] = useState<string | null>(null);
-  const [password, setPassword] = useState<string | null>(null);
+  const [showConfirmPassword, setshowConfirmPassword] =
+    useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+  const {setUser} = useAuthStore.getState();
+
+  const form = useForm<SignupSchema>({
+    resolver: zodResolver(SignupSchema),
+    reValidateMode: 'onChange',
+    mode: 'onChange',
+    defaultValues: {
+      role: 'USER',
+    },
+  });
+
+  const mutation = useMutation({
+    mutationFn: (payload: SignupDto) =>
+      ApiSDK.AuthenticationService.postV1AuthSignup(payload),
+    onSuccess(data) {
+      if (data.payload) {
+        const {token, user} = data.payload;
+
+        ApiSDK.OpenAPI.TOKEN = token;
+        setUser({token, user});
+        router.navigate('/(tabs)');
+      }
+    },
+    onError(error) {
+      const parsedError = apiErrorParser(error);
+      setApiError(parsedError.message);
+    },
+  });
+
+  const onSubmit = (data: SignupSchema) => {
+    mutation.mutate(data);
+  };
 
   return (
     <SafeAreaView
       style={{
         backgroundColor: Colors.background,
-        minHeight: Math.round(windowHeight),
       }}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <Text style={styles.title}>Enter your email address</Text>
-          <View style={{flex: 1}}>
-            <TextInput
+          <View style={styles.fieldContainer}>
+            <TextInputWithControl
+              name="username"
+              control={form.control}
               placeholder="Username"
-              value={username ?? ''}
-              onChangeText={setUsername}
+              textContentType="username"
+              hasError={!!form.formState.errors.username}
+              prefixIcon={<User color={Colors.grey[300]} />}
             />
 
-            <TextInput
+            <TextInputWithControl
+              name="password"
+              control={form.control}
               placeholder="Password"
               autoCapitalize="none"
-              value={password ?? ''}
-              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              textContentType="password"
+              hasError={!!form.formState.errors.password}
+              erroMessage={form.formState.errors.password?.message}
+              prefixIcon={<Lock color={Colors.grey[300]} />}
+              suffixIcon={
+                <TouchableOpacity
+                  hitSlop={20}
+                  onPress={() => setShowPassword(!showPassword)}>
+                  {showPassword ? (
+                    <EyeOff color={Colors.grey[300]} />
+                  ) : (
+                    <Eye color={Colors.grey[300]} />
+                  )}
+                </TouchableOpacity>
+              }
             />
-            <TextInput
+            <TextInputWithControl
+              name="confirmPassword"
+              control={form.control}
               placeholder="Confirm Password"
               autoCapitalize="none"
-              value={password ?? ''}
-              onChangeText={setPassword}
+              secureTextEntry={!showConfirmPassword}
+              textContentType="password"
+              hasError={!!form.formState.errors.password}
+              erroMessage={
+                form.formState.errors.confirmPassword?.message ||
+                (apiError as unknown as string)
+              }
+              prefixIcon={<Lock color={Colors.grey[300]} />}
+              suffixIcon={
+                <TouchableOpacity
+                  hitSlop={20}
+                  onPress={() => setshowConfirmPassword(!showConfirmPassword)}>
+                  {showConfirmPassword ? (
+                    <EyeOff color={Colors.grey[300]} />
+                  ) : (
+                    <Eye color={Colors.grey[300]} />
+                  )}
+                </TouchableOpacity>
+              }
             />
           </View>
-
           <View>
-            <Text style={styles.termsText}>
-              By registering, you agree to our{' '}
-              <Text style={styles.linkText}>Terms of Service</Text> and{' '}
-              <Text style={styles.linkText}>Privacy Policy</Text>
-            </Text>
+            <Link href="/auth/login" asChild>
+              <TouchableOpacity hitSlop={20}>
+                <Text style={styles.termsText}>
+                  Already have an account?{' '}
+                  <Text style={styles.linkText}>Login</Text>
+                </Text>
+              </TouchableOpacity>
+            </Link>
 
             <View style={styles.bottomContainer}>
-              <TouchableOpacity
-                onPress={() => router.navigate('/(tabs)')}
-                style={[
-                  styles.button,
-                  username ? styles.buttonActive : styles.buttonDisabled,
-                ]}
-                // disabled={!username && !password}
-              >
-                <Text style={styles.buttonText}>Continue</Text>
-              </TouchableOpacity>
+              <Button
+                title="Continue"
+                variant={form.formState.isValid ? 'PRIMARY' : 'DISABLED'}
+                isLoading={mutation.isPending}
+                disabled={!form.formState.isValid || mutation.isPending}
+                onPress={form.handleSubmit(onSubmit)}
+              />
             </View>
           </View>
         </View>
@@ -81,9 +159,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 40,
   },
-  backButton: {
-    marginBottom: 20,
-  },
   title: {
     fontSize: 18,
     fontWeight: '600',
@@ -98,24 +173,11 @@ const styles = StyleSheet.create({
   linkText: {
     fontWeight: '600',
   },
-  button: {
-    marginTop: 20,
-    paddingVertical: 15,
-    borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonActive: {
-    backgroundColor: Colors.primary.main,
-  },
-  buttonDisabled: {
-    backgroundColor: Colors.disabled,
-    opacity: 0.5,
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
   bottomContainer: {
-    marginBottom: 20,
+    marginVertical: 20,
+  },
+  fieldContainer: {
+    flex: 1,
+    gap: 20,
   },
 });

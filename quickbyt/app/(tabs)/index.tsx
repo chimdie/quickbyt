@@ -17,6 +17,7 @@ import {foods, categories} from '@/data/mockData';
 import {Food, Category, CategoryT} from '@/types';
 import {Colors} from '@/constants/Colors';
 import {Link} from 'expo-router';
+import {useAuthStore} from '@/store/useAuthStore';
 
 export default function HomeScreen() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryT | null>(
@@ -24,6 +25,7 @@ export default function HomeScreen() {
   );
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [, setCart] = useState<{[key: string]: number}>({}); // cart
+  const {user} = useAuthStore();
   // const {top, bottom} = useSafeAreaInsets();
 
   const filteredFoods = useMemo(() => {
@@ -79,7 +81,9 @@ export default function HomeScreen() {
     <SafeAreaView>
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Good day, Foodie!</Text>
+          <Text style={styles.greeting}>
+            Good day, {user?.username || 'Foodie'}!
+          </Text>
           <Text style={styles.subtitle}>What would you like to eat today?</Text>
         </View>
         <Link href="/(tabs)/profile" asChild>
@@ -151,7 +155,7 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginTop: 4,
   },
   profileBtn: {

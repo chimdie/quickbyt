@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
     marginBottom: 8,
   },
   details: {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   items: {
     fontSize: 14,
-    color: Colors.primary.light,
+    color: Colors.grey[250],
   },
   amount: {
     fontSize: 16,
